@@ -16,6 +16,9 @@ class E_bank_manager{
 	E_bank* id_Zmu_Data;
         E_bank_fit* iso_med_Zmu_Data;
         E_bank_fit* sip_isomed_Zmu_Data;
+
+	E_bank_fit* vl_Zmu_Data;
+	E_bank_fit* vl_Zmu_MC;
 	
 	
 	//electrons //need to get from andres
@@ -26,6 +29,9 @@ class E_bank_manager{
 	E_bank* id_Zel_Data;
         E_bank* iso_med_Zel_Data;
         E_bank* sip_isomed_Zel_Data;
+
+	E_bank* vl_Zel_Data;
+	E_bank* vl_Zel_MC;
 
 
 	E_bank_manager();
@@ -145,6 +151,32 @@ E_bank_manager::E_bank_manager(){
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
+				"tpTree/Medium_pt_eta/fit_eff_plots/");
+
+
+	/////////MUON VERY LOOSE//////////
+	vl_Zmu_Data = new E_bank_fit(2016,
+				path+"TnP_MuonID_data2016_IsoTkMu22_VeryLoose_A_pt1.root",
+				path+"TnP_MuonID_data2017_isoMu24eta2p1_VeryLoose_A_pt1.root",
+				path+"TnP_MuonID_data2018_isoMu24eta2p1_VeryLoose_A_pt1.root",
+				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	vl_Zmu_Data->applySystematics(0.0054);
+	vl_Zmu_Data->doLowPtFit(6.,50.,20.,
+				path+"TnP_MuonID_data2016_IsoTkMu22_VeryLoose_A_pt3.root",
+				path+"TnP_MuonID_data2017_isoMu24eta2p1_VeryLoose_A_pt3.root",
+				path+"TnP_MuonID_data2018_isoMu24eta2p1_VeryLoose_A_pt3.root",
+				"tpTree/Medium_pt_eta/fit_eff_plots/");
+
+	vl_Zmu_MC = new E_bank_fit(2016,
+				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_VeryLoose_A_pt1.root",
+				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_VeryLoose_A_pt1.root",
+				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_VeryLoose_A_pt1.root",
+				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	vl_Zmu_MC->applySystematics(0.0054);
+	vl_Zmu_MC->doLowPtFit(6.,50.,20.,
+				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_VeryLoose_A_pt3.root",
+				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_VeryLoose_A_pt3.root",
+				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
 		
 }
@@ -368,6 +400,7 @@ int main(){
 	std::cout<<e1->getDataIdEfficiency(13.99,2.11,13)<<std::endl;
 	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_map16);
 	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_fitmap16);
+	e1->vl_Zmu_Data->printMap(e1->vl_Zmu_Data->_fitmap16);
 	/*std::cout<<"iso testing ... "<<std::endl;
 	std::cout<<e1->getMCIsoPair(3.1,0.1,13,2017).first<<" "<<e1->getMCIsoPair(3.1,0.1,13,2017).second<<std::endl;
 	std::cout<<e1->getDataSipPair(44.,1.36,13,2018).first<<" "<<e1->getDataSipPair(44.,1.36,13,2018).second<<std::endl;
