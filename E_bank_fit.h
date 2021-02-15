@@ -96,7 +96,7 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 		if( prob2 < 0.01){
 			std::cout<<"Warning >> pol2 with P<1%"<<std::endl;
 		}
-		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 20, 3, 20);
+		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 17, 3, 20);
    		(TVirtualFitter::GetFitter())->GetConfidenceIntervals(hint, 0.68);
 		hint->SetFillColor(kRed);
 		/*hbinX = proj->GetNbinsX();

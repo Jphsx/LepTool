@@ -62,6 +62,15 @@ class E_bank_manager{
 	
 	std::pair<double,double> getMCSipPair(double pt, double eta, int pdg, int year);
 	std::pair<double,double> getDataSipPair(double pt, double eta, int pdg, int year);
+
+	double getSF(double effdata, double effmc);
+	double getSFerr(double effdata, double effmc, double errdata, double errmc);
+	std::pair<double,double> getSFpair(double effdata, double effmc, double errdata, double errmc );
+	std::pair<double,double> getSFpair(std::pair<double,double> data, std::pair<double,double> mc );
+
+	std::pair<double,double> getGold(std::pair<double,double> id, std::pair<double,double> iso, std:pair<double,double> sip);
+	std::pair<double,double> getSilver(std::pair<double,double> id, std::pair<double,double> iso, std:pair<double,double> sip);
+	std::pair<double,double> getBronze(std::pair<double,double> id, std::pair<double,double> iso);
 };
 
 
@@ -388,6 +397,35 @@ std::pair<double,double> E_bank_manager::getDataSipPair(double pt, double eta, i
 	return std::make_pair(-1.,-1.);
 }
 
+double E_bank_manager::getSF(double effdata, double effmc){ return effdata/effmc; }
+double E_bank_manager::getSFerr(double effdata, double effmc, double errdata, double errmc){ 
+		
+	return (effdata/effmc)*std::sqrt( (errdata*errdata)/(effdata*effdata) + (errmc*errmc)/(effmc*effmc) ); 
+}
+double E_bank_manager::getGSerr(double v1, double v2, double v3, double e1, double e2, double e3 ){
+	//gold and silver have the same form
+	return (v1*v2*v3)*std::sqrt( (v1*v1)/(e1*e1) + (v2*v2)/(e2*e2) + (v3*v3)/(e3*e3) );	
+}
+double E_bank_manager::getBerr(double v1, double v2, double e1, double e2 ){
+	//bronze has same form as G and S but less parameters
+	return (1.-(v1*v2))*std::sqrt( (v1*v1)/(e1*e1) + (v2*v2)/(e2*e2)  );
+}
+
+std::pair<double,double> E_bank_manager::getSFpair(double effdata, double effmc, double errdata, double errmc ){
+	return std::make_pair( getSF(effdata,effmc) , getSFerr( effdata,effmc, errdata,errmc) );
+}
+std::pair<double,double> E_bank_manager::getSFpair(std::pair<double,double> data, std::pair<double,double> mc ){
+	return std::make_pair( getSF(data.first, mc.first), getSFerr(data.first,mc.first, data.second, mc.second));
+}
+std::pair<double,double> E_bank_manager::getGold(std::pair<double,double> id, std::pair<double,double> iso, std:pair<double,double> sip){
+	return std::make_pair( id.first * iso.first * sip.first,  getGSerr(id.first,iso.first,sip.first, id.second,iso.second,sip.second ) );
+}
+std::pair<double,double> E_bank_manager::getSilver(std::pair<double,double> id, std::pair<double,double> iso, std:pair<double,double> sip){
+	return std::make_pair( id.first * iso.first * (1.-sip.first),  getGSerr(id.first,iso.first,(1.-sip.first), id.second,iso.second,sip.second ) );
+}
+std::pair<double,double> E_bank_manager::getBronze(std::pair<double,double> id, std::pair<double,double> iso){
+	return std::make_pair( (1.-(id.first*iso.first)),  getBerr( id.first, iso.first, id.second, iso.second) );
+}
 //testing
 int main(){
 	E_bank_manager* e1 = new E_bank_manager();
