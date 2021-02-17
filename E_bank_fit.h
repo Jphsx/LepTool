@@ -117,7 +117,7 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 		proj->Draw();		
 		hint->Draw("E3 SAME");
 		proj->Draw("SAME");
-		cnew->SaveAs(("test1_"+std::to_string(i)+".pdf").c_str());
+		//cnew->SaveAs(("test1_"+std::to_string(i)+".pdf").c_str());
 		TH1D* clone = (TH1D*) hint->Clone();
 		//clone contains the CI with added systematics
 		for(int j=1; j<= hint->GetNbinsX(); j++){
@@ -127,7 +127,7 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 		proj->Draw();		
 		clone->Draw("E3 SAME");
 		proj->Draw("SAME");
-		canclone->SaveAs(("test2_"+std::to_string(i)+".pdf").c_str());
+		//canclone->SaveAs(("test2_"+std::to_string(i)+".pdf").c_str());
 		////////////////////////////////
 
 		//discretize function and errors into a map (addressed fmap)
