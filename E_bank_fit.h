@@ -18,6 +18,7 @@ class E_bank_fit : public E_bank{
 	std::map<std::pair<double,double>, std::pair<double,double> > _fitmap17;
 	std::map<std::pair<double,double>, std::pair<double,double> > _fitmap18;
 	double _split_threshold;
+	
 
 	//overwrite parent members to deal with split threshold
 	std::pair<double,double> getPair(double pt, double eta, int year);
@@ -52,7 +53,7 @@ E_bank_fit::E_bank_fit(int year, std::string f16, std::string f17, std::string f
 
 }
 void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap){
-
+	
 	TList* t = hCanv->GetListOfPrimitives();
 	//t->Print();
 	TH2D* h = (TH2D*) hCanv->GetPrimitive(t->At(1)->GetName());
@@ -96,7 +97,8 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 		if( prob2 < 0.01){
 			std::cout<<"Warning >> pol2 with P<1%"<<std::endl;
 		}
-		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 17, 3, 20);
+		//TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 17, 3, 20);
+		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 2, 3, 20);//simple binning for gsb plots (this is temporary and not intended for efficiency extraction
    		(TVirtualFitter::GetFitter())->GetConfidenceIntervals(hint, 0.68);
 		hint->SetFillColor(kRed);
 		/*hbinX = proj->GetNbinsX();
@@ -179,12 +181,15 @@ void E_bank_fit::doLowPtFit(double fitLow, double fitUp, double split_threshold,
 }
 std::pair<double,double> E_bank_fit::getPair(double pt, double eta, int year=0){
 	if(year>0)_year=year;
-	if(pt>= _split_threshold){
+	//check if fits are initialized
+	bool fitMapIsEmpty= false;
+	if(_fitmap16.size()==0 || _fitmap17.size()==0 || _fitmap18.size()==0) fitMapIsEmpty =true;
+	if(pt>= _split_threshold || fitMapIsEmpty){
 	if(_year == 2016) return _map16[transformValue(pt,eta, _map16)];
 	if(_year == 2017) return _map17[transformValue(pt,eta, _map17)];
 	if(_year == 2018) return _map18[transformValue(pt,eta, _map18)];
 	}
-	if(pt< _split_threshold){
+	else if(pt< _split_threshold){
 	if(_year == 2016) return _fitmap16[transformValue(pt,eta, _fitmap16)];
 	if(_year == 2017) return _fitmap17[transformValue(pt,eta, _fitmap17)];
 	if(_year == 2018) return _fitmap18[transformValue(pt,eta, _fitmap18)];
@@ -193,12 +198,15 @@ std::pair<double,double> E_bank_fit::getPair(double pt, double eta, int year=0){
 }
 double E_bank_fit::getEfficiency(double pt, double eta, int year=0){
 	if(year>0)_year=year;
-	if(pt>= _split_threshold){
+	//check if fits are initialized
+	bool fitMapIsEmpty= false;
+	if(_fitmap16.size()==0 || _fitmap17.size()==0 || _fitmap18.size()==0) fitMapIsEmpty =true;
+	if(pt>= _split_threshold || fitMapIsEmpty){
 	if(_year == 2016) return _map16[transformValue(pt,eta, _map16)].first;
 	if(_year == 2017) return _map17[transformValue(pt,eta, _map17)].first;
 	if(_year == 2018) return _map18[transformValue(pt,eta, _map18)].first;
 	}
-	if(pt< _split_threshold){
+	else if(pt< _split_threshold){
 	if(_year == 2016) return _fitmap16[transformValue(pt,eta, _fitmap16)].first;
 	if(_year == 2017) return _fitmap17[transformValue(pt,eta, _fitmap17)].first;
 	if(_year == 2018) return _fitmap18[transformValue(pt,eta, _fitmap18)].first;
@@ -207,12 +215,15 @@ double E_bank_fit::getEfficiency(double pt, double eta, int year=0){
 }
 double E_bank_fit::getError(double pt, double eta, int year=0){
 	if(year>0)_year=year;
-	if(pt>= _split_threshold){
+	//check if fits are initialized
+	bool fitMapIsEmpty= false;
+	if(_fitmap16.size()==0 || _fitmap17.size()==0 || _fitmap18.size()==0) fitMapIsEmpty =true;
+	if(pt>= _split_threshold || fitMapIsEmpty){
 	if(_year == 2016) return _map16[transformValue(pt,eta, _map16)].second;
 	if(_year == 2017) return _map17[transformValue(pt,eta, _map17)].second;
 	if(_year == 2018) return _map18[transformValue(pt,eta, _map18)].second;
 	}
-	if(pt< _split_threshold){
+	else if(pt< _split_threshold){
 	if(_year == 2016) return _fitmap16[transformValue(pt,eta, _fitmap16)].second;
 	if(_year == 2017) return _fitmap17[transformValue(pt,eta, _fitmap17)].second;
 	if(_year == 2018) return _fitmap18[transformValue(pt,eta, _fitmap18)].second;
