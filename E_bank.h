@@ -36,6 +36,8 @@ class E_bank{
 	void setYear(int year);
 
 	double _syst0;
+	double _ptUpperEdge;
+	double _etaUpperEdge;
 
 
 	E_bank();
@@ -85,9 +87,13 @@ void E_bank::populateMap(TCanvas* hCanv ,std::map<std::pair<double,double>, std:
 		for(int j=1; j<=nbinsY; j++){
 			//std::cout<<"X: "<<i<<" "<<h->GetXaxis()->GetBinLowEdge(i)<<"  Y: "<<j<<" "<<h->GetYaxis()->GetBinLowEdge(j) <<"  "<<h->GetBinContent(i,j)<<" "<<h->GetBinError(i,j)<<std::endl;
 			map[ std::make_pair(h->GetYaxis()->GetBinLowEdge(j),h->GetXaxis()->GetBinLowEdge(i)) ] = std::make_pair(h->GetBinContent(i,j),h->GetBinError(i,j));
+			
 		}
 	}
 	//std::cout<<std::endl;
+	//grab and store upper edges for plotting utility
+	 _ptUpperEdge= h->GetYaxis()->GetBinUpEdge(nbinsY);
+	 _etaUpperEdge= h->GetXaxis()->GetBinUpEdge(nbinsX);
 }
 
 void E_bank::setYear(int year){
