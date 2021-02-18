@@ -76,6 +76,8 @@ class E_bank_manager{
 	double getGSerr(double v1, double v2, double v3, double e1, double e2, double e3 );
 	
 	double getBerr(double v1, double v2, double e1, double e2 );
+
+	int verbose =1;
 };
 
 
@@ -88,110 +90,144 @@ E_bank_manager::E_bank_manager(){
 	std::string path = "../";
 	//muon filename
 
+	std::cout<<"Beginning Muon init"<<std::endl;
 	/////MUON ID/////////
+	std::cout<<"J id data .."<<std::endl;
 	id_Jmu_Data = new E_bank(2016,
 				path+"TnPJ_MuonID_data2016_Mu7p5Tk2_veryLoose__Medium_E.root",
 				path+"TnPJ_MuonID_data2017_Mu7p5Tk2_veryLoose__Medium_E.root",
 				path+"TnPJ_MuonID_data2018_Mu7p5Tk2_veryLoose__Medium_E.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	id_Jmu_Data->applySystematics(0.0151);	
+	//id_Jmu_Data->applySystematics(0.0151);	
+	id_Jmu_Data->applySystematics(std::vector<double>{0.001,0.001});
 
+	std::cout<<"Z id data .."<<std::endl;
 	id_Zmu_Data = new E_bank(2016,
 				path+"TnP_MuonID_data2016_IsoTkMu22_veryLoose__Medium_A_pt1.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_veryLoose__Medium_A_pt1.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_veryLoose__Medium_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	id_Zmu_Data->applySystematics(0.0054);
+	//id_Zmu_Data->applySystematics(0.0054);
+	id_Zmu_Data->applySystematics(std::vector<double>{0.001,0.0003});
 
+	std::cout<<"J id mc .. "<<std::endl;
 	id_Jmu_MC = new E_bank(2016,
 				path+"TnPJ_MuonID_mc2016_weight_Mu7p5Tk2_veryLoose__Medium_E.root",
 				path+"TnPJ_MuonID_mc2017_weight_Mu7p5Tk2_veryLoose__Medium_E.root",
 				path+"TnPJ_MuonID_mc2018_weight_Mu7p5Tk2_veryLoose__Medium_E.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	id_Jmu_MC->applySystematics(0.0151);	
+	//id_Jmu_MC->applySystematics(0.0151);	
+	id_Jmu_MC->applySystematics(std::vector<double>{0.001,0.001});
 
+	std::cout<<"Z id mc .. "<<std::endl;
 	id_Zmu_MC = new E_bank(2016,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__Medium_A_pt1.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__Medium_A_pt1.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__Medium_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	id_Zmu_MC->applySystematics(0.0054);
+	//id_Zmu_MC->applySystematics(0.0054);
+	id_Zmu_MC->applySystematics(std::vector<double>{0.001,0.0003});
 
 	/////MUON ISO///////////
+
+	std::cout<<"Z iso data .. "<<std::endl;
 	iso_med_Zmu_Data = new E_bank_fit(2016,
 				path+"TnP_MuonID_data2016_IsoTkMu22_veryLoose__ISO_MED_A_pt1.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_veryLoose__ISO_MED_A_pt1.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_veryLoose__ISO_MED_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	iso_med_Zmu_Data->applySystematics(0.0057);	
-	iso_med_Zmu_Data->doLowPtFit(6.,50.,20.,
+	//iso_med_Zmu_Data->applySystematics(0.0057);	
+	iso_med_Zmu_Data->applySystematics(std::vector<double>{0.007,0.002});
+	iso_med_Zmu_Data->setSystematicsLow(std::vector<double>{0.008,0.004});
+	iso_med_Zmu_Data->doLowPtFit(3.,50.,20.,
 				path+"TnP_MuonID_data2016_IsoTkMu22_veryLoose__ISO_MED_A_pt3.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_veryLoose__ISO_MED_A_pt3.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_veryLoose__ISO_MED_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-				
+	//iso_med_Zmu_Data->applySystematicsLow(std::vector<double>{0.008,0.004});
+		
+	std::cout<<"Z iso MC .. "<<std::endl;		
 	iso_med_Zmu_MC = new E_bank_fit(2016,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__ISO_MED_A_pt1.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__ISO_MED_A_pt1.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__ISO_MED_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	iso_med_Zmu_MC->applySystematics(0.0057);
-	iso_med_Zmu_MC->doLowPtFit(6.,50.,20.,
+	//iso_med_Zmu_MC->applySystematics(0.0057);
+	iso_med_Zmu_MC->applySystematics(std::vector<double>{0.007,0.002});
+	iso_med_Zmu_MC->setSystematicsLow(std::vector<double>{0.008,0.004});
+	iso_med_Zmu_MC->doLowPtFit(3.,50.,20.,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__ISO_MED_A_pt3.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__ISO_MED_A_pt3.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__ISO_MED_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	//iso_med_Zmu_MC->applySystematicsLow(std::vector<double>{0.008,0.004});	
+
 
 	//////MUON SIP//////////
+	std::cout<<"Z sip data .. "<<std::endl;
 	sip_isomed_Zmu_Data = new E_bank_fit(2016,
 				path+"TnP_MuonID_data2016_IsoTkMu22_veryLoose__SIP_ISOMED_A_pt1.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt1.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	sip_isomed_Zmu_Data->applySystematics(0.0057);
+	//sip_isomed_Zmu_Data->applySystematics(0.0057);
+	sip_isomed_Zmu_Data->applySystematics(std::vector<double>{0.001,0.002});
+	sip_isomed_Zmu_Data->setSystematicsLow(std::vector<double>{0.005,0.003});
 	sip_isomed_Zmu_Data->doLowPtFit(6.,50.,20.,
 				path+"TnP_MuonID_data2016_IsoTkMu22_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	//sip_isomed_Zmu_Data->applySystematicsLow(std::vector<double>{0.005,0.003});
 				
+	std::cout<<"Z sip mc .. "<<std::endl;
 	sip_isomed_Zmu_MC = new E_bank_fit(2016,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__SIP_ISOMED_A_pt1.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt1.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	sip_isomed_Zmu_MC->applySystematics(0.0057);
+	//sip_isomed_Zmu_MC->applySystematics(0.0057);
+	sip_isomed_Zmu_MC->applySystematics(std::vector<double>{0.001,0.002});
+	sip_isomed_Zmu_MC->setSystematicsLow(std::vector<double>{0.005,0.003});
 	sip_isomed_Zmu_MC->doLowPtFit(6.,50.,20.,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_veryLoose__SIP_ISOMED_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-
+	//sip_isomed_Zmu_MC->applySystematicsLow(std::vector<double>{0.005,0.003});
 
 	/////////MUON VERY LOOSE//////////
+	std::cout<<" Z VL data "<<std::endl;
 	vl_Zmu_Data = new E_bank_fit(2016,
 				path+"TnP_MuonID_data2016_IsoTkMu22_VeryLoose_A_pt1.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_VeryLoose_A_pt1.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_VeryLoose_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	vl_Zmu_Data->applySystematics(0.0054);
+	//vl_Zmu_Data->applySystematics(0.0054);
+	vl_Zmu_Data->applySystematics(std::vector<double>{0.001, 0.0003});	
+	vl_Zmu_Data->setSystematicsLow(std::vector<double>{0.001,0.001});
 	vl_Zmu_Data->doLowPtFit(6.,50.,20.,
 				path+"TnP_MuonID_data2016_IsoTkMu22_VeryLoose_A_pt3.root",
 				path+"TnP_MuonID_data2017_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				path+"TnP_MuonID_data2018_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	//vl_Zmu_Data->applySystematicsLow(std::vector<double>{0.001,0.001});
 
+	std::cout<<" Z VL mc "<<std::endl;
 	vl_Zmu_MC = new E_bank_fit(2016,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_VeryLoose_A_pt1.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_VeryLoose_A_pt1.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_VeryLoose_A_pt1.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
-	vl_Zmu_MC->applySystematics(0.0054);
+	//vl_Zmu_MC->applySystematics(0.0054);
+	vl_Zmu_MC->applySystematics(std::vector<double>{0.001,0.0003});
+	vl_Zmu_MC->setSystematicsLow(std::vector<double>{0.001,0.001});
 	vl_Zmu_MC->doLowPtFit(6.,50.,20.,
 				path+"TnP_MuonID_mc2016_weight_IsoTkMu22_VeryLoose_A_pt3.root",
 				path+"TnP_MuonID_mc2017_weight_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
+	//vl_Zmu_MC->applySystematics(std::vector<double>{0.001,0.001});
 		
 }
 ///////////eff def
@@ -439,15 +475,20 @@ int main(){
 	E_bank_manager* e1 = new E_bank_manager();
 	
 	//hax, can do this to do electrons!
+	
 	E_bank_fit* id_Zmu_Data = (E_bank_fit*) e1->id_Zmu_Data;
 	E_bank_fit* id_Zmu_MC = (E_bank_fit*) e1->id_Zmu_MC;
 	
-
+	std::cout<<"j16"<<std::endl;
 	e1->id_Jmu_Data->printMap(e1->id_Jmu_Data->_map16);
+	std::cout<<"zid16"<<std::endl;
 	id_Zmu_Data->printMap(id_Zmu_Data->_map16);
+	std::cout<<"zid16"<<std::endl;
 	e1->id_Zmu_Data->printMap(e1->id_Zmu_Data->_map16);
 
-
+	std::cout<<"ziso16"<<std::endl;
+	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_fitmap16);
+	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_map16);
 	
 
 

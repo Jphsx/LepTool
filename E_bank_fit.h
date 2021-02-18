@@ -19,6 +19,7 @@ class E_bank_fit : public E_bank{
 	std::map<std::pair<double,double>, std::pair<double,double> > _fitmap18;
 	double _split_threshold;
 	
+	std::vector<double> _syst_low;//low pt systematic
 
 	//overwrite parent members to deal with split threshold
 	std::pair<double,double> getPair(double pt, double eta, int year);
@@ -28,6 +29,9 @@ class E_bank_fit : public E_bank{
 	void extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap);
 
 	E_bank_fit(int year, std::string f16, std::string f17, std::string f18, std::string histPath);
+
+	//void applySystematicsLow(std::vector<double> errors, int year);
+	void setSystematicsLow(std::vector<double> errors);
 
 };
 E_bank_fit::E_bank_fit(int year, std::string f16, std::string f17, std::string f18, std::string histPath){
@@ -65,11 +69,15 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 	int hbinX;
 	double sum2=0.;
 	//loop and get projection
+	double pt_edge,sys;
 	for(int i=1; i<=nbinsX; i++){
 		TH1D* proj = h->ProjectionY(("hprojY"+std::to_string(i)).c_str(),i,i);
 		//loop through and adjust errors according to systematics
 		for(int j=1; j<=proj->GetNbinsX(); j++){
-			proj->SetBinError(j,  std::sqrt( proj->GetBinError(j)*proj->GetBinError(j) + _syst0*_syst0 ) );
+			pt_edge = proj->GetXaxis()->GetBinLowEdge(j);
+			if(pt_edge < 20) sys = _syst_low[i-1];
+			if(pt_edge >= 20) sys = _syst[i-1];
+			proj->SetBinError(j,  std::sqrt( proj->GetBinError(j)*proj->GetBinError(j) + sys*sys ) );
 		}
 
 
@@ -98,7 +106,7 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 			std::cout<<"Warning >> pol2 with P<1%"<<std::endl;
 		}
 		//TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 17, 3, 20);
-		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 2, 3, 20);//simple binning for gsb plots (this is temporary and not intended for efficiency extraction
+		TH1D *hint = new TH1D(("hint"+std::to_string(i)).c_str(),"Fitted CI", 17, 3, 20);//simple binning for gsb plots (this is temporary and not intended for efficiency extraction
    		(TVirtualFitter::GetFitter())->GetConfidenceIntervals(hint, 0.68);
 		hint->SetFillColor(kRed);
 		/*hbinX = proj->GetNbinsX();
@@ -121,7 +129,10 @@ void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::m
 		TH1D* clone = (TH1D*) hint->Clone();
 		//clone contains the CI with added systematics
 		for(int j=1; j<= hint->GetNbinsX(); j++){
-			clone->SetBinError(j,  std::sqrt(clone->GetBinError(j)*clone->GetBinError(j)+_syst0*_syst0)  );
+			pt_edge = clone->GetXaxis()->GetBinLowEdge(j);
+			if(pt_edge < 20) sys = _syst_low[i-1];
+			if(pt_edge >= 20) sys = _syst[i-1];
+			clone->SetBinError(j,  std::sqrt(clone->GetBinError(j)*clone->GetBinError(j)+_syst_low[i]*_syst_low[i])  );
 		}
 		TCanvas* canclone = new TCanvas();
 		proj->Draw();		
@@ -230,4 +241,19 @@ double E_bank_fit::getError(double pt, double eta, int year=0){
 	}
 	return -1;
 }
+void E_bank_fit::setSystematicsLow(std::vector<double> errors){
+	_syst_low = errors;
+}
+/*void E_bank_fit::applySystematicsLow(std::vector<double> errors, int year=0){
+	_syst_low = errors;
+	if(year==0){
+		addError(errors,_fitmap16);
+		addError(errors,_fitmap17);
+		addError(errors,_fitmap18);
+	}
+	if(year==2016) addError(errors,_fitmap16);
+	if(year==2017) addError(errors,_fitmap17);
+	if(year==2018) addError(errors,_fitmap18);
+}
+*/
 #endif

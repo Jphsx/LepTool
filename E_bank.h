@@ -36,6 +36,7 @@ class E_bank{
 	void setYear(int year);
 
 	double _syst0;
+	std::vector<double> _syst;// systematics are pt inclusive, elements of syst vector are the eta bins, needs to be ordered in increasing eta
 	double _ptUpperEdge;
 	double _etaUpperEdge;
 
@@ -44,7 +45,9 @@ class E_bank{
 	E_bank(int year, std::string f16, std::string f17, std::string f18, std::string histPath);
 	void populateMap(TCanvas* hCanv, std::map<std::pair<double,double>, std::pair<double,double> >& map);
 	void applySystematics(double error, int year);
-	void addError(double error, std::map<std::pair<double,double>, std::pair<double,double> >& map);
+	void applySystematics(std::vector<double> errors, int year);
+	void addError(double error, std::map<std::pair<double,double>, std::pair<double,double> >& map);//keeping this simple function in to add a flat systematic
+	void addError(std::vector<double> errors, std::map<std::pair<double,double>,std::pair<double,double> >& map);
 };
 //default constructor
 E_bank::E_bank(){};
@@ -181,6 +184,24 @@ void E_bank::addError(double error, std::map<std::pair<double,double>, std::pair
 		itr.second.second = std::sqrt(itr.second.second*itr.second.second + error*error);
 	}
 }
+void E_bank::addError(std::vector<double> errors, std::map<std::pair<double,double>, std::pair<double,double> >& map){
+	//loop map and generate a set of eta keys
+	std::set<double> etakeys;
+	for (auto& itr : map){
+		etakeys.insert(itr.first.second);
+	}
+	//iterate set, combine associated errors based on eta
+	int i=0;
+	for (auto& eta_itr : etakeys){
+		for( auto& map_itr : map ){
+			if( eta_itr == map_itr.first.second){//etamatch
+				map_itr.second.second = std::sqrt( map_itr.second.second*map_itr.second.second + errors[i]*errors[i] );
+			}
+		}
+		i++;
+	}
+	
+}
 void E_bank::applySystematics(double error, int year=0){
 	_syst0=error;//for now assume all years same error
 	if(year==0){
@@ -191,6 +212,17 @@ void E_bank::applySystematics(double error, int year=0){
 	if(year==2016) addError(error,_map16);
 	if(year==2017) addError(error,_map17);
 	if(year==2018) addError(error,_map18);
+}
+void E_bank::applySystematics(std::vector<double> errors, int year=0){
+	_syst = errors;
+	if(year==0){
+		addError(errors,_map16);
+		addError(errors,_map17);
+		addError(errors,_map18);
+	}
+	if(year==2016) addError(errors,_map16);
+	if(year==2017) addError(errors,_map17);
+	if(year==2018) addError(errors,_map18);
 }
 
 #endif
