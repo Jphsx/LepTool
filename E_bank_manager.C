@@ -87,7 +87,10 @@ E_bank_manager::E_bank_manager(){
 
 	//big collection of paths
 	//muon path
-	std::string path = "../";
+	//path for my local computer
+	//std::string path = "../";
+	//path on unl
+	std::string path="/home/t3-ku/janguian/TnP_Muon_Output/";
 	//muon filename
 
 	std::cout<<"Beginning Muon init"<<std::endl;
