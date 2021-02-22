@@ -163,7 +163,9 @@ std::pair<double,double> E_bank::transformValue(double pt, double eta, std::map<
 	double mindpt=999.;
 	double mindeta=999.;
 	double ptkey=0.,etakey=0.;
+
 	for (auto& itr : map){
+	
 		if( (itr.first.first <= pt) && ((pt - itr.first.first)<mindpt )  ){
 			mindpt = pt - itr.first.first;
 			ptkey = itr.first.first;
@@ -173,6 +175,7 @@ std::pair<double,double> E_bank::transformValue(double pt, double eta, std::map<
 			etakey = itr.first.second;
 		}
 	}
+
 	return std::make_pair(ptkey,etakey);
 	
 }

@@ -417,7 +417,7 @@ double E_bank_manager::getGSerr(double v1, double v2, double v3, double e1, doub
 }
 double E_bank_manager::getBerr(double v1, double v2, double e1, double e2 ){
 	//bronze has same form as G and S but less parameters
-	return (1.-(v1*v2))*std::sqrt( (e1*e1)/(v1*v1) + (e2*e2)/(v2*v2)  );
+	return (v1*v2)*std::sqrt( (e1*e1)/(v1*v1) + (e2*e2)/(v2*v2)  );
 }
 
 std::pair<double,double> E_bank_manager::getSFpair(double effdata, double effmc, double errdata, double errmc ){
@@ -439,7 +439,8 @@ std::pair<double,double> E_bank_manager::getBronze(std::pair<double,double> id, 
 //general function to make 2d plot
 
 //void make2d( E_bank_manager* bankman, E_bank* dat, E_bank* mc, int year, int rank, std::string name){//involves no splitting
-void make2d ( E_bank_manager* bankman,int year, int rank, std::string name, E_bank_fit* bankid_data, E_bank_fit* bankid_mc, 
+void make2d ( E_bank_manager* bankman,int year, int rank, std::string name, //E_bank_fit* bankid_data, E_bank_fit* bankid_mc, 
+E_bank* bankid_data, E_bank* bankid_mc, 
 E_bank_fit* bankiso_data=0,E_bank_fit* bankiso_mc=0, 
 E_bank_fit* banksip_data=0,E_bank_fit* banksip_mc=0,
 E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
@@ -562,7 +563,7 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	
 	*/
 
-
+	gStyle->SetPalette(kAquamarine);
 	hmc = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"m").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hdata = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"d").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hsf = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"s").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
@@ -579,10 +580,11 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 		
 			//in the case of VL
 			if(rank == 0 ){
-				effid_data = bankid_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
-				errid_data = bankid_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
-				effid_mc = bankid_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
-				errid_mc = bankid_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
+				//hax treat vl like iso because extrap, this gets us past needing to slicej), 
+				effid_data = bankiso_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
+				errid_data = bankiso_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
+				effid_mc = bankiso_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
+				errid_mc = bankiso_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					
 			
 			
@@ -597,24 +599,30 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	
 			}//end rank0 check
 			if(rank > 0 ){
+					
+				
 				if( hdata->GetYaxis()->GetBinLowEdge(j) >= 20. ){
+					//std::cout<<"high pt eval id "<< hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effid_data = bankid_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_data = bankid_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					effid_mc = bankid_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_mc = bankid_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 				}
 				if(hdata->GetYaxis()->GetBinLowEdge(j)<20.){//pick jpsi in id
+					//std::cout<<"low pt eval id "<<hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effid_data = bankJ_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_data = bankJ_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					effid_mc = bankJ_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_mc = bankJ_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 				}
 					//everything else sets normally
+					//std::cout<<"eval iso "<<hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effiso_data = bankiso_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					erriso_data = bankiso_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					effiso_mc = bankiso_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					erriso_mc = bankiso_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 
+					//std::cout<<"eval sip "<<hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effsip_data = banksip_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errsip_data = banksip_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					effsip_mc = banksip_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
@@ -686,18 +694,18 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	hsf->Draw("COLZ");
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
-        	 auto t = new TText(hmc->GetXaxis()->GetBinCenter(i)+0.27,
+        	 auto t = new TText(hmc->GetXaxis()->GetBinCenter(i)+0.25,
                             hmc->GetYaxis()->GetBinCenter(j)+0.5,
                             Form(" %4.3f +/- %4.3f",hmc->GetBinContent(i,j), hmc->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
-		 t->SetTextColor(kRed);
+		 t->SetTextColor(kRed+2);
         	 t->SetTextAlign(22);
         	 t->Draw();
       		}
   	}
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
-        	 auto t = new TText(hdata->GetXaxis()->GetBinCenter(i)-0.27,
+        	 auto t = new TText(hdata->GetXaxis()->GetBinCenter(i)-0.25,
                             hdata->GetYaxis()->GetBinCenter(j)+0.5,
                             Form(" %4.3f +/- %4.3f",hdata->GetBinContent(i,j), hdata->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
@@ -708,10 +716,10 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
         	 auto t = new TText(hsf->GetXaxis()->GetBinCenter(i),
-                            hsf->GetYaxis()->GetBinCenter(j)-1.5,
+                            hsf->GetYaxis()->GetBinCenter(j)-1.48,
                             Form(" %4.3f +/- %4.3f",hsf->GetBinContent(i,j), hsf->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
-		 t->SetTextColor(kMagenta);
+		 t->SetTextColor(kMagenta+2);
         	 t->SetTextAlign(22);
         	 t->Draw();
       		}
@@ -724,10 +732,10 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	tleg1->Draw();
 	auto tleg2= new TText(0.45,91, Form("MC") );
 	tleg2->SetTextSize(0.03);
-	tleg2->SetTextColor(kRed);	
+	tleg2->SetTextColor(kRed+2);	
 	tleg2->Draw();
 	auto tleg3= new TText(0.7,91, Form("Data/MC") );
-	tleg3->SetTextColor(kMagenta);
+	tleg3->SetTextColor(kMagenta+2);
 	tleg3->SetTextSize(0.03);
 	tleg3->Draw(); 
 
@@ -747,88 +755,93 @@ setTDRStyle();
 	E_bank_manager* e1 = new E_bank_manager();
 	
 	
-	//hax, can do this to do electrons!
-	E_bank_fit* id_Zmu_Data = (E_bank_fit*) e1->id_Zmu_Data;
-	E_bank_fit* id_Zmu_MC = (E_bank_fit*) e1->id_Zmu_MC;
+	//hax, can do this to do electrons! DONT DO THIS
+	//it has a random 50/50 chance of not being about to access it's map from parent class ...... error is not reproducible, it is random .. WHAT?!
+	//E_bank_fit* id_Zmu_Data = (E_bank_fit*) e1->id_Zmu_Data;
+	//E_bank_fit* id_Zmu_MC = (E_bank_fit*) e1->id_Zmu_MC; 
 	
 
 
 
 	e1->id_Jmu_Data->printMap(e1->id_Jmu_Data->_map16);
-	
-	id_Zmu_Data->printMap(id_Zmu_Data->_map16);
-	e1->id_Zmu_Data->printMap(e1->id_Zmu_Data->_map16);
+	e1->id_Jmu_Data->printMap(e1->id_Jmu_MC->_map16);
+	//id_Zmu_Data->printMap(id_Zmu_Data->_map16);
+	//id_Zmu_MC->printMap(id_Zmu_MC->_map16);
+	//e1->id_Zmu_Data->printMap(e1->id_Zmu_Data->_map16);
 
 
 	//2016 GSB VL
 	make2d(e1,2016,1,"2016 Gold Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	//id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,	
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
+
 	make2d(e1,2016,2,"2016 Silver Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
 	make2d(e1,2016,3,"2016 Bronze Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
+	//first set of objects are just placeholders that will get sliced
 	make2d(e1,2016,0,"2016 V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
-	e1->iso_med_Zmu_Data);
+	e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 	//2017 GSB VL
 	make2d(e1,2017,1,"2017 Gold Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 	make2d(e1,2017,2,"2017 Silver Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
 	make2d(e1,2017,3,"2017 Bronze Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 	make2d(e1,2017,0,"2017 V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
-	e1->iso_med_Zmu_Data);
+	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 
 	//2018 GSB VL
 	make2d(e1,2018,1,"2018 Gold Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 	make2d(e1,2018,2,"2018 Silver Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
 	make2d(e1,2018,3,"2018 Bronze Eff.",
-	id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 	make2d(e1,2018,0,"2018 V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
-	e1->iso_med_Zmu_Data);
+	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 
 }
