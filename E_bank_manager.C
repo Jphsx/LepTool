@@ -449,7 +449,7 @@ double E_bank_manager::getGSerr(double v1, double v2, double v3, double e1, doub
 }
 double E_bank_manager::getBerr(double v1, double v2, double e1, double e2 ){
 	//bronze has same form as G and S but less parameters
-	return (1.-(v1*v2))*std::sqrt( (e1*e1)/(v1*v1) + (e2*e2)/(v2*v2)  );
+	return (v1*v2)*std::sqrt( (e1*e1)/(v1*v1) + (e2*e2)/(v2*v2)  );
 }
 
 std::pair<double,double> E_bank_manager::getSFpair(double effdata, double effmc, double errdata, double errmc ){
