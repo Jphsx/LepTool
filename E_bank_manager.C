@@ -91,7 +91,83 @@ E_bank_manager::E_bank_manager(){
 	//std::string path = "../";
 	//path on unl
 	std::string path="/home/t3-ku/janguian/TnP_Muon_Output/";
-	//muon filename
+	std::string pathEl="/home/t3-ku/janguian/TnP_Electron_Output/";
+
+	std::cout<<"Beginning Electron init"<<std::endl;
+	std::cout<<"Zel id MC"<<std::endl;
+	id_Zel_MC = new E_bank(2016,
+				pathEl+"TnPZ_susyID_MC2016_Tight.root",
+				pathEl+"TnPZ_susyID_MC2017_Tight.root",
+				pathEl+"TnPZ_susyID_MC2018_tight.root",
+				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	id_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002});
+	id_Zel_MC->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001});
+
+	std::cout<<"Zel sip MC"<<std::endl;
+	iso_med_Zel_MC = new E_bank(2016,
+				pathEl+"TnPZ_susyID_MC2016_Iso.root",
+				pathEl+"TnPZ_susyID_MC2017_Iso.root",
+				pathEl+"TnPZ_susyID_MC2018_Iso.root",
+				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	iso_med_Zel_MC->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005});
+        iso_med_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001});
+
+
+	std::cout<<"Zel iso MC"<<std::endl;
+	sip_isomed_Zel_MC = new E_bank(2016,
+				pathEl+"TnPZ_susyID_MC2016_Sip3D.root",
+				pathEl+"TnPZ_susyID_MC2017_Sip3D.root",
+				pathEl+"TnPZ_susyID_MC2018_Sip3D.root",
+				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	sip_isomed_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002});
+        sip_isomed_Zel_MC->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001});
+
+
+	std::cout<<"Zel id Data"<<std::endl;
+	id_Zel_Data = new E_bank(2016,
+				pathEl+"TnPZ_susyID_data2016_Tight.root",
+				pathEl+"TnPZ_susyID_data2016_Tight.root",//PLACEHOLDER NO 2017 AVAILABLE
+				pathEl+"TnPZ_susyID_data2018_tight.root",
+				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002});
+        id_Zel_Data->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001});
+
+
+	std::cout<<"Zel iso Data"<<std::endl;
+	iso_med_Zel_Data = new E_bank(2016,
+				pathEl+"TnPZ_susyID_data2016_Iso.root",
+				pathEl+"TnPZ_susyID_data2016_Iso.root",//PLACEHOLDER NO 2017 AVAILABLE
+				pathEl+"TnPZ_susyID_data2018_Iso.root",
+				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005});
+        iso_med_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001});
+
+	std::cout<<"Zel sip Data"<<std::endl;
+	sip_isomed_Zel_Data = new E_bank(2016,
+				pathEl+"TnPZ_susyID_data2016_Sip3D.root",
+				pathEl+"TnPZ_susyID_data2016_Sip3D.root",//PLACEHOLDER NO 2017 AVAILABLE
+				pathEl+"TnPZ_susyID_data2018_Sip3D.root",
+				 "tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002});
+        sip_isomed_Zel_Data->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001});
+
+	std::cout<<"Zel VL MC"<<std::endl;
+	vl_Zel_MC = new E_bank(2016,
+			pathEl+"TnPZ_susyID_MC2016_veryLoose.root",
+			pathEl+"TnPZ_susyID_MC2017_veryLoose.root",
+			pathEl+"TnPZ_susyID_MC2018_veryLoose.root",
+			"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	vl_Zel_MC->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01});
+        vl_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003});
+
+	std::cout<<"Zel VL Data"<<std::endl;
+	vl_Zel_Data = new E_bank(2016,
+			pathEl+"TnPZ_susyID_data2016_veryLoose.root",
+			pathEl+"TnPZ_susyID_data2016_veryLoose.root",//PLACEHOLDER NO 2017 AVAILABLE
+			pathEl+"TnPZ_susyID_data2018_veryLoose.root",
+			"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
+	vl_Zel_Data->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01});
+        vl_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003});
 
 	std::cout<<"Beginning Muon init"<<std::endl;
 	/////MUON ID/////////
@@ -236,7 +312,7 @@ E_bank_manager::E_bank_manager(){
 ///////////eff def
 double E_bank_manager::getMCIdEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_MC->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -252,7 +328,7 @@ double E_bank_manager::getMCIdEfficiency(double pt, double eta, int pdg, int yea
 }
 double E_bank_manager::getDataIdEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_Data->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -268,7 +344,7 @@ double E_bank_manager::getDataIdEfficiency(double pt, double eta, int pdg, int y
 }
 double E_bank_manager::getMCIsoEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_MC->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_MC->getEfficiency(pt,eta,year);
@@ -277,7 +353,7 @@ double E_bank_manager::getMCIsoEfficiency(double pt, double eta, int pdg, int ye
 }
 double E_bank_manager::getDataIsoEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_Data->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_Data->getEfficiency(pt,eta,year);
@@ -286,7 +362,7 @@ double E_bank_manager::getDataIsoEfficiency(double pt, double eta, int pdg, int 
 }
 double E_bank_manager::getMCSipEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_MC->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_MC->getEfficiency(pt,eta,year);
@@ -295,7 +371,7 @@ double E_bank_manager::getMCSipEfficiency(double pt, double eta, int pdg, int ye
 }
 double E_bank_manager::getDataSipEfficiency(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_Data->getEfficiency(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_Data->getEfficiency(pt,eta,year);
@@ -305,7 +381,7 @@ double E_bank_manager::getDataSipEfficiency(double pt, double eta, int pdg, int 
 /////////////error def
 double E_bank_manager::getMCIdError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_MC->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -321,7 +397,7 @@ double E_bank_manager::getMCIdError(double pt, double eta, int pdg, int year=0){
 }	
 double E_bank_manager::getDataIdError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_Data->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -337,7 +413,7 @@ double E_bank_manager::getDataIdError(double pt, double eta, int pdg, int year=0
 }
 double E_bank_manager::getMCIsoError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_MC->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_MC->getError(pt,eta,year);
@@ -346,7 +422,7 @@ double E_bank_manager::getMCIsoError(double pt, double eta, int pdg, int year=0)
 }
 double E_bank_manager::getDataIsoError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_Data->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_Data->getError(pt,eta,year);
@@ -355,7 +431,7 @@ double E_bank_manager::getDataIsoError(double pt, double eta, int pdg, int year=
 }	
 double E_bank_manager::getMCSipError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_MC->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_MC->getError(pt,eta,year);
@@ -364,7 +440,7 @@ double E_bank_manager::getMCSipError(double pt, double eta, int pdg, int year=0)
 }
 double E_bank_manager::getDataSipError(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_Data->getError(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_Data->getError(pt,eta,year);
@@ -374,7 +450,7 @@ double E_bank_manager::getDataSipError(double pt, double eta, int pdg, int year=
 ////////////////pair def
 std::pair<double,double> E_bank_manager::getMCIdPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_MC->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -390,7 +466,7 @@ std::pair<double,double> E_bank_manager::getMCIdPair(double pt, double eta, int 
 }
 std::pair<double,double> E_bank_manager::getDataIdPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return id_Zel_Data->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		//threshold defaults to 20GeV for jpsi and z
@@ -406,7 +482,7 @@ std::pair<double,double> E_bank_manager::getDataIdPair(double pt, double eta, in
 }
 std::pair<double,double> E_bank_manager::getMCIsoPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_MC->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_MC->getPair(pt,eta,year);
@@ -415,7 +491,7 @@ std::pair<double,double> E_bank_manager::getMCIsoPair(double pt, double eta, int
 }
 std::pair<double,double> E_bank_manager::getDataIsoPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return iso_med_Zel_Data->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return iso_med_Zmu_Data->getPair(pt,eta,year);
@@ -424,7 +500,7 @@ std::pair<double,double> E_bank_manager::getDataIsoPair(double pt, double eta, i
 }
 std::pair<double,double> E_bank_manager::getMCSipPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_MC->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_MC->getPair(pt,eta,year);
@@ -433,7 +509,7 @@ std::pair<double,double> E_bank_manager::getMCSipPair(double pt, double eta, int
 }
 std::pair<double,double> E_bank_manager::getDataSipPair(double pt, double eta, int pdg, int year=0){
 	if(abs(pdg) == 11){//electron
-		//todo
+		return sip_isomed_Zel_Data->getPair(pt,eta,year);
 	}
 	if(abs(pdg) == 13){//muon
 		return sip_isomed_Zmu_Data->getPair(pt,eta,year);
@@ -492,7 +568,10 @@ int main(){
 	std::cout<<"ziso16"<<std::endl;
 	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_fitmap16);
 	e1->iso_med_Zmu_Data->printMap(e1->iso_med_Zmu_Data->_map16);
-	
+
+	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map16);
+	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map17);
+	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
 
 
 }

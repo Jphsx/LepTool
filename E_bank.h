@@ -8,7 +8,7 @@
 #include <iostream>
 #include "TList.h"
 #include "TH2D.h"
-
+#include<set>
 class E_bank{
 
 	public:
@@ -46,8 +46,10 @@ class E_bank{
 	void populateMap(TCanvas* hCanv, std::map<std::pair<double,double>, std::pair<double,double> >& map);
 	void applySystematics(double error, int year);
 	void applySystematics(std::vector<double> errors, int year);
+	void applySystematic_ptRange(double ptLow, double ptHigh, std::vector<double>errors, int year);
 	void addError(double error, std::map<std::pair<double,double>, std::pair<double,double> >& map);//keeping this simple function in to add a flat systematic
 	void addError(std::vector<double> errors, std::map<std::pair<double,double>,std::pair<double,double> >& map);
+        void addError(double ptLow, double ptHigh ,std::vector<double> errors, std::map<std::pair<double,double>, std::pair<double,double> >& map);
 };
 //default constructor
 E_bank::E_bank(){};
@@ -202,6 +204,26 @@ void E_bank::addError(std::vector<double> errors, std::map<std::pair<double,doub
 	}
 	
 }
+void E_bank::addError(double ptLow, double ptHigh ,std::vector<double> errors, std::map<std::pair<double,double>, std::pair<double,double> >& map){
+        //loop map and generate a set of eta keys
+        std::set<double> etakeys;
+        for (auto& itr : map){
+                etakeys.insert(itr.first.second);
+        }
+        //iterate set, combine associated errors based on eta
+        int i=0;
+        for (auto& eta_itr : etakeys){
+                for( auto& map_itr : map ){
+                        if( eta_itr == map_itr.first.second){//etamatch
+				if( map_itr.first.first < ptHigh && map_itr.first.first >= ptLow){
+                                map_itr.second.second = std::sqrt( map_itr.second.second*map_itr.second.second + errors[i]*errors[i] );
+                        }}
+                }
+                i++;
+        }
+
+}
+
 void E_bank::applySystematics(double error, int year=0){
 	_syst0=error;//for now assume all years same error
 	if(year==0){
@@ -224,7 +246,18 @@ void E_bank::applySystematics(std::vector<double> errors, int year=0){
 	if(year==2017) addError(errors,_map17);
 	if(year==2018) addError(errors,_map18);
 }
+void E_bank::applySystematic_ptRange(double ptLow, double ptHigh, std::vector<
+double>errors, int year=0){
+	if(year==0){
+                addError(ptLow,ptHigh,errors,_map16);
+                addError(ptLow,ptHigh,errors,_map17);
+                addError(ptLow,ptHigh,errors,_map18);
+        }
+        if(year==2016) addError(ptLow,ptHigh,errors,_map16);
+        if(year==2017) addError(ptLow,ptHigh,errors,_map17);
+        if(year==2018) addError(ptLow,ptHigh,errors,_map18);
 
+}
 #endif
 //testing 
 
