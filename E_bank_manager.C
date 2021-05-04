@@ -126,7 +126,7 @@ E_bank_manager::E_bank_manager(){
 	std::cout<<"Zel id Data"<<std::endl;
 	id_Zel_Data = new E_bank(2016,
 				pathEl+"TnPZ_susyID_data2016_Tight.root",
-				pathEl+"TnPZ_susyID_data2016_Tight.root",//to be updated?
+				pathEl+"TnPZ_susyID_data2017_Tight.root",
 				pathEl+"TnPZ_susyID_data2018_tight.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
 	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002});
@@ -136,7 +136,7 @@ E_bank_manager::E_bank_manager(){
 	std::cout<<"Zel iso Data"<<std::endl;
 	iso_med_Zel_Data = new E_bank(2016,
 				pathEl+"TnPZ_susyID_data2016_Iso.root",
-				pathEl+"TnPZ_susyID_data2016_Iso.root",//to be updated?
+				pathEl+"TnPZ_susyID_data2017_Iso.root",
 				pathEl+"TnPZ_susyID_data2018_Iso.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
 	iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005});
@@ -145,7 +145,7 @@ E_bank_manager::E_bank_manager(){
 	std::cout<<"Zel sip Data"<<std::endl;
 	sip_isomed_Zel_Data = new E_bank(2016,
 				pathEl+"TnPZ_susyID_data2016_Sip3D.root",
-				pathEl+"TnPZ_susyID_data2016_Sip3D.root",//to be updated?
+				pathEl+"TnPZ_susyID_data2017_Sip3D.root",
 				pathEl+"TnPZ_susyID_data2018_Sip3D.root",
 				 "tpTree/TightSUSY_pt_eta/fit_eff_plots/");
 	sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002});
@@ -163,7 +163,7 @@ E_bank_manager::E_bank_manager(){
 	std::cout<<"Zel VL Data"<<std::endl;
 	vl_Zel_Data = new E_bank(2016,
 			pathEl+"TnPZ_susyID_data2016_veryLoose.root",
-			pathEl+"TnPZ_susyID_data2016_veryLoose.root",// to be updated?
+			pathEl+"TnPZ_susyID_data2017_veryLoose.root",
 			pathEl+"TnPZ_susyID_data2018_veryLoose.root",
 			"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
 	vl_Zel_Data->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01});
@@ -609,7 +609,7 @@ int main(){
         std::cout<<"electron ID Data"<<std::endl;
 	std::cout<<"2016"<<std::endl;
         e1->id_Zel_Data->printMap(e1->id_Zel_Data->_map16);
-	std::cout<<"2016*"<<std::endl;
+	std::cout<<"2017"<<std::endl;
         e1->id_Zel_Data->printMap(e1->id_Zel_Data->_map17);
         std::cout<<"2018"<<std::endl;
 	e1->id_Zel_Data->printMap(e1->id_Zel_Data->_map18);
@@ -618,7 +618,7 @@ int main(){
         std::cout<<"electron Iso Data"<<std::endl;
 	std::cout<<"2016"<<std::endl;
         e1->iso_med_Zel_Data->printMap(e1->iso_med_Zel_Data->_map16);
-	std::cout<<"2016*"<<std::endl;
+	std::cout<<"2017"<<std::endl;
         e1->iso_med_Zel_Data->printMap(e1->iso_med_Zel_Data->_map17);
 	std::cout<<"2018"<<std::endl;
         e1->iso_med_Zel_Data->printMap(e1->iso_med_Zel_Data->_map18);
@@ -627,7 +627,7 @@ int main(){
         std::cout<<"electron SIP Data"<<std::endl;
 	std::cout<<"2016"<<std::endl;
         e1->sip_isomed_Zel_Data->printMap(e1->sip_isomed_Zel_Data->_map16);
-	std::cout<<"2016*"<<std::endl;
+	std::cout<<"2017"<<std::endl;
         e1->sip_isomed_Zel_Data->printMap(e1->sip_isomed_Zel_Data->_map17);
         std::cout<<"2018"<<std::endl;
 	e1->sip_isomed_Zel_Data->printMap(e1->sip_isomed_Zel_Data->_map18);
@@ -636,7 +636,7 @@ int main(){
         std::cout<<"electron Very Loose Data"<<std::endl;
 	std::cout<<"2016"<<std::endl;
         e1->vl_Zel_Data->printMap(e1->vl_Zel_Data->_map16);
-	std::cout<<"2016*"<<std::endl;
+	std::cout<<"2017"<<std::endl;
         e1->vl_Zel_Data->printMap(e1->vl_Zel_Data->_map17);
 	std::cout<<"2018"<<std::endl;
         e1->vl_Zel_Data->printMap(e1->vl_Zel_Data->_map18);
