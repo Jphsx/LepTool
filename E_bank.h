@@ -43,7 +43,7 @@ class E_bank{
 
 	E_bank();
 	E_bank(int year, std::string f16, std::string f17, std::string f18, std::string histPath);
-	void populateMap(TCanvas* hCanv, std::map<std::pair<double,double>, std::pair<double,double> >& map);
+	void populateMap(TCanvas* hCanv, std::map<std::pair<double,double>, std::pair<double,double> >& map,  int CanvIdx);
 	void applySystematics(double error, int year);
 	void applySystematics(std::vector<double> errors, int year);
 	void applySystematic_ptRange(double ptLow, double ptHigh, std::vector<double>errors, int year);
@@ -57,31 +57,37 @@ E_bank::E_bank(){};
 E_bank::E_bank(int year, std::string f16, std::string f17, std::string f18, std::string histPath){
 	//set default year to draw from
 	_year = year;
+	//is there TnP of fullsimfastsim sf?
+	int canv_primitive_index=1;
+	if(histPath==""){
+		canv_primitive_index=0;
+	}	
+
 	TFile* f1 = TFile::Open(f16.c_str());
 	f1->cd(histPath.c_str());
 	std::string name = (gDirectory->GetListOfKeys()->At(0)->GetName());
-	populateMap((TCanvas*) f1->Get((histPath+name).c_str()),_map16);
+	populateMap((TCanvas*) f1->Get((histPath+name).c_str()),_map16,canv_primitive_index);
 	f1->Close();
 
 	TFile* f2 = TFile::Open(f17.c_str());
 	f2->cd(histPath.c_str());
 	name = (gDirectory->GetListOfKeys()->At(0)->GetName());
-	populateMap((TCanvas*) f2->Get((histPath+name).c_str()),_map17);
+	populateMap((TCanvas*) f2->Get((histPath+name).c_str()),_map17,canv_primitive_index);
 	f2->Close();
 
 	TFile* f3 = TFile::Open(f18.c_str());
 	f3->cd(histPath.c_str());
 	name = (gDirectory->GetListOfKeys()->At(0)->GetName());
-	populateMap((TCanvas*) f3->Get((histPath+name).c_str()),_map18);
+	populateMap((TCanvas*) f3->Get((histPath+name).c_str()),_map18,canv_primitive_index);
 	f3->Close();
 
 }
 
-void E_bank::populateMap(TCanvas* hCanv ,std::map<std::pair<double,double>, std::pair<double,double> >& map ){
+void E_bank::populateMap(TCanvas* hCanv ,std::map<std::pair<double,double>, std::pair<double,double> >& map , int CanvIdx = 1){
 	
 	TList* t = hCanv->GetListOfPrimitives();//index 0 TFrame, index 1 TH1
-	//TCanvas* cnew = new TCanvas();
-	TH2D* h = (TH2D*) hCanv->GetPrimitive(t->At(1)->GetName());
+	//TCanvas* cnew = new TCanvas();//fullsim fast sim is on index 0 though
+	TH2D* h = (TH2D*) hCanv->GetPrimitive(t->At(CanvIdx)->GetName());
 	//h->Draw();
 	//x needs to always be eta
 	//y needs to always b pt

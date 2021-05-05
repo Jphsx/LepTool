@@ -22,7 +22,7 @@ class E_bank_manager{
 	E_bank_fit* vl_Zmu_MC;
 	
 	
-	//electrons //need to get from andres
+	//electrons //need to get 2018 id data from andres
 	E_bank* id_Zel_MC;
 	E_bank* iso_med_Zel_MC;
 	E_bank* sip_isomed_Zel_MC;
@@ -33,6 +33,17 @@ class E_bank_manager{
 
 	E_bank* vl_Zel_Data;
 	E_bank* vl_Zel_MC;
+
+	//fullsim fast sim 
+	E_bank* id_SimF_el;
+	E_bank* iso_med_SimF_el;
+	E_bank* sip_isomed_SimF_el;
+	E_bank* vl_SimF_el;
+
+	E_bank* id_SimF_mu;
+        E_bank* iso_med_SimF_mu;
+        E_bank* sip_isomed_SimF_mu;
+        E_bank* vl_SimF_mu;
 
 
 	E_bank_manager();
@@ -77,6 +88,25 @@ class E_bank_manager{
 	
 	double getBerr(double v1, double v2, double e1, double e2 );
 
+	double getIdSimSF(double pt, double eta, int pdg, int year);
+	double getIdSimSFerr(double pt, double eta, int pdg, int year);
+	std::pair<double, double> getIdSimSFpair( double pt, double eta, int pdg, int year);
+
+	double getIsoSimSF(double pt, double eta, int pdg, int year);
+        double getIsoSimSFerr(double pt, double eta, int pdg, int year);
+        std::pair<double, double> getIsoSimSFpair( double pt, double eta, int pdg, int year);
+
+	double getSipSimSF(double pt, double eta, int pdg, int year);
+        double getSipSimSFerr(double pt, double eta, int pdg, int year);
+        std::pair<double, double> getSipSimSFpair( double pt, double eta, int pdg, int year);
+
+	double getVlSimSF(double pt, double eta, int pdg, int year);
+        double getVlSimSFerr(double pt, double eta, int pdg, int year);
+        std::pair<double, double> getVlSimSFpair( double pt, double eta, int pdg, int year);
+
+
+
+
 	int verbose =1;
 };
 
@@ -92,6 +122,8 @@ E_bank_manager::E_bank_manager(){
 	//path on unl
 	std::string path="/home/t3-ku/janguian/TnP_Muon_Output/";
 	std::string pathEl="/home/t3-ku/janguian/TnP_Electron_Output/";
+	std::string pathSimF="/home/t3-ku/janguian/FullSim-FastSim_SF/";
+
 
 	std::cout<<"Beginning Electron init"<<std::endl;
 	std::cout<<"Zel id MC"<<std::endl;
@@ -307,7 +339,61 @@ E_bank_manager::E_bank_manager(){
 				path+"TnP_MuonID_mc2018_weight_isoMu24eta2p1_VeryLoose_A_pt3.root",
 				"tpTree/Medium_pt_eta/fit_eff_plots/");
 	//vl_Zmu_MC->applySystematics(std::vector<double>{0.001,0.001});
-		
+
+	/////fullsim fast sim SF
+	std::cout<<" el simF"<<std::endl;
+
+	id_SimF_el =  new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_el_sf_ID.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_el_sf_ID.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_el_sf_ID.root",
+                                "");
+
+
+	iso_med_SimF_el = new E_bank(2016,
+                		pathSimF+"TTJets_FastVsFull_Summer16_el_sf_iso.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_el_sf_iso.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_el_sf_iso.root",
+                                "");
+
+	sip_isomed_SimF_el = new E_bank(2016,
+				pathSimF+"TTJets_FastVsFull_Summer16_el_sf_sip3D.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_el_sf_sip3D.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_el_sf_sip3D.root",
+                                ""); 
+        vl_SimF_el = new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_el_sf_vl.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_el_sf_vl.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_el_sf_vl.root",
+                                "");
+
+	std::cout<<" mu simF"<<std::endl;
+        id_SimF_mu =  new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_mu_sf_ID.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_mu_sf_ID.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_mu_sf_ID.root",
+                                "");
+
+        iso_med_SimF_mu = new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_mu_sf_iso.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_mu_sf_iso.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_mu_sf_iso.root",
+                                "");
+
+        sip_isomed_SimF_mu = new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_mu_sf_sip3D.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_mu_sf_sip3D.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_mu_sf_sip3D.root",
+                                "");
+        vl_SimF_mu = new E_bank(2016,
+                                pathSimF+"TTJets_FastVsFull_Summer16_mu_sf_vl.root",
+                                pathSimF+"TTJets_FastVsFull_Fall17_mu_sf_vl.root",
+                                pathSimF+"TTJets_FastVsFull_Autumn18_mu_sf_vl.root",
+                                "");
+
+
+
+	
 }
 ///////////eff def
 double E_bank_manager::getMCIdEfficiency(double pt, double eta, int pdg, int year=0){
@@ -547,6 +633,123 @@ std::pair<double,double> E_bank_manager::getBronze(std::pair<double,double> id, 
 	return std::make_pair( (1.-(id.first*iso.first)),  getBerr( id.first, iso.first, id.second, iso.second) );
 }
 
+//sim sf definitions
+double E_bank_manager::getIdSimSF(double pt, double eta, int pdg, int year){
+	if(abs(pdg) == 11){//electron
+                return id_SimF_el->getEfficiency(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return id_SimF_mu->getEfficiency(pt,eta,year);
+        }
+        return -1;
+
+}
+double  E_bank_manager::getIdSimSFerr(double pt, double eta, int pdg, int year){
+	if(abs(pdg) == 11){//electron
+                return id_SimF_el->getError(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return id_SimF_mu->getError(pt,eta,year);
+        }
+        return -1;
+}
+std::pair<double, double>  E_bank_manager::getIdSimSFpair( double pt, double eta, int pdg, int year){
+	if(abs(pdg) == 11){//electron
+                return id_SimF_el->getPair(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return id_SimF_mu->getPair(pt,eta,year);
+        }
+        return  std::make_pair(-1.,-1.);
+}
+
+double E_bank_manager::getIsoSimSF(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return iso_med_SimF_el->getEfficiency(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return iso_med_SimF_mu->getEfficiency(pt,eta,year);
+        }
+        return -1;
+
+}
+double  E_bank_manager::getIsoSimSFerr(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return iso_med_SimF_el->getError(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return iso_med_SimF_mu->getError(pt,eta,year);
+        }
+        return -1;
+}
+std::pair<double, double>  E_bank_manager::getIsoSimSFpair( double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return iso_med_SimF_el->getPair(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return iso_med_SimF_mu->getPair(pt,eta,year);
+        }
+        return  std::make_pair(-1.,-1.);
+}
+
+double E_bank_manager::getSipSimSF(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return sip_isomed_SimF_el->getEfficiency(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return sip_isomed_SimF_mu->getEfficiency(pt,eta,year);
+        }
+        return -1;
+
+}
+double  E_bank_manager::getSipSimSFerr(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return sip_isomed_SimF_el->getError(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return sip_isomed_SimF_mu->getError(pt,eta,year);
+        }
+        return -1;
+}
+std::pair<double, double>  E_bank_manager::getSipSimSFpair( double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return sip_isomed_SimF_el->getPair(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return sip_isomed_SimF_mu->getPair(pt,eta,year);
+        }
+        return  std::make_pair(-1.,-1.);
+}
+
+double E_bank_manager::getVlSimSF(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return vl_SimF_el->getEfficiency(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return vl_SimF_mu->getEfficiency(pt,eta,year);
+        }
+        return -1;
+
+}
+double  E_bank_manager::getVlSimSFerr(double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return vl_SimF_el->getError(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return vl_SimF_mu->getError(pt,eta,year);
+        }
+        return -1;
+}
+std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta, int pdg, int year){
+        if(abs(pdg) == 11){//electron
+                return vl_SimF_el->getPair(pt,eta,year);
+        }
+        if(abs(pdg) == 13){//muon
+                return vl_SimF_mu->getPair(pt,eta,year);
+        }
+        return  std::make_pair(-1.,-1.);
+}
+
 
 
 int main(){
@@ -573,7 +776,7 @@ int main(){
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map17);
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
 
-
+	
 }
 
 
