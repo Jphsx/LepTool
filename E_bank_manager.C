@@ -757,7 +757,7 @@ int main(){
 	E_bank_manager* e1 = new E_bank_manager();
 	
 	//hax, can do this to do electrons!
-	
+/*	
 	E_bank_fit* id_Zmu_Data = (E_bank_fit*) e1->id_Zmu_Data;
 	E_bank_fit* id_Zmu_MC = (E_bank_fit*) e1->id_Zmu_MC;
 	
@@ -775,6 +775,41 @@ int main(){
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map16);
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map17);
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
+*/
+	std::cout<<"Electrons"<<std::endl;
+	e1->id_SimF_el->printMap(e1->id_SimF_el->_map16);
+	e1->id_SimF_el->printMap(e1->id_SimF_el->_map17);
+	e1->id_SimF_el->printMap(e1->id_SimF_el->_map18);
+
+        e1->iso_med_SimF_el->printMap(e1->iso_med_SimF_el->_map16);
+        e1->iso_med_SimF_el->printMap(e1->iso_med_SimF_el->_map17);
+	e1->iso_med_SimF_el->printMap(e1->iso_med_SimF_el->_map18);
+	
+	e1->sip_isomed_SimF_el->printMap( e1->sip_isomed_SimF_el->_map16);
+	e1->sip_isomed_SimF_el->printMap( e1->sip_isomed_SimF_el->_map17);
+	e1->sip_isomed_SimF_el->printMap( e1->sip_isomed_SimF_el->_map18);
+
+        e1->vl_SimF_el->printMap( e1->vl_SimF_el->_map16);
+	e1->vl_SimF_el->printMap( e1->vl_SimF_el->_map17);
+	e1->vl_SimF_el->printMap( e1->vl_SimF_el->_map18);
+	
+	std::cout<<"Muons"<<std::endl;
+
+	e1->id_SimF_mu->printMap(e1->id_SimF_mu->_map16);
+        e1->id_SimF_mu->printMap(e1->id_SimF_mu->_map17);
+        e1->id_SimF_mu->printMap(e1->id_SimF_mu->_map18);
+
+        e1->iso_med_SimF_mu->printMap(e1->iso_med_SimF_mu->_map16);
+        e1->iso_med_SimF_mu->printMap(e1->iso_med_SimF_mu->_map17);
+        e1->iso_med_SimF_mu->printMap(e1->iso_med_SimF_mu->_map18);
+
+        e1->sip_isomed_SimF_mu->printMap( e1->sip_isomed_SimF_mu->_map16);
+        e1->sip_isomed_SimF_mu->printMap( e1->sip_isomed_SimF_mu->_map17);
+        e1->sip_isomed_SimF_mu->printMap( e1->sip_isomed_SimF_mu->_map18);
+
+        e1->vl_SimF_mu->printMap( e1->vl_SimF_mu->_map16);
+        e1->vl_SimF_mu->printMap( e1->vl_SimF_mu->_map17);
+        e1->vl_SimF_mu->printMap( e1->vl_SimF_mu->_map18);
 
 	
 }
