@@ -22,7 +22,6 @@ class E_bank_manager{
 	E_bank_fit* vl_Zmu_MC;
 	
 	
-	//electrons //need to get 2018 id data from andres
 	E_bank* id_Zel_MC;
 	E_bank* iso_med_Zel_MC;
 	E_bank* sip_isomed_Zel_MC;
@@ -752,7 +751,7 @@ std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta
 
 
 
-int main(){
+/*int main(){
 
 	E_bank_manager* e1 = new E_bank_manager();
 	
@@ -777,6 +776,6 @@ int main(){
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
 
 	
-}
+}*/
 
 
