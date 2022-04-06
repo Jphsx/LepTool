@@ -119,9 +119,9 @@ E_bank_manager::E_bank_manager(){
 	//path for my local computer
 	//std::string path = "../";
 	//path on unl
-	std::string path="/home/t3-ku/janguian/TnP_Muon_Output/";
-	std::string pathEl="/home/t3-ku/janguian/TnP_Electron_Output/";
-	std::string pathSimF="/home/t3-ku/janguian/FullSim-FastSim_SF/";
+	std::string path="./TnP_Muon_Output/";
+	std::string pathEl="./TnP_Electron_Output/";
+	std::string pathSimF="./FullSim-FastSim_SF/";
 
 
 	std::cout<<"Beginning Electron init"<<std::endl;
@@ -131,28 +131,39 @@ E_bank_manager::E_bank_manager(){
 				pathEl+"TnPZ_susyID_MC2017_Tight.root",
 				pathEl+"TnPZ_susyID_MC2018_tight.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	id_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002});
-	id_Zel_MC->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001});
+	id_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002}, 2018);
+	id_Zel_MC->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001}, 2018);
+	id_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.001, 0.005}, 2017);
+	id_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.002}, 2017);
+	id_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.003, 0.003}, 2016);
+	id_Zel_MC->applySystematic_ptRange(20., 999., {0.002, 0.002, 0.002}, 2016);
 
-	std::cout<<"Zel sip MC"<<std::endl;
+	std::cout<<"Zel iso MC"<<std::endl;
 	iso_med_Zel_MC = new E_bank(2016,
 				pathEl+"TnPZ_susyID_MC2016_Iso.root",
 				pathEl+"TnPZ_susyID_MC2017_Iso.root",
 				pathEl+"TnPZ_susyID_MC2018_Iso.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	iso_med_Zel_MC->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005});
-        iso_med_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001});
+	iso_med_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002}, 2018);
+    iso_med_Zel_MC->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001}, 2018);
+    iso_med_Zel_MC->applySystematic_ptRange(0., 20., {0.002, 0.003, 0.003}, 2017);
+    iso_med_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.002}, 2017);
+    iso_med_Zel_MC->applySystematic_ptRange(0., 20., {0.002, 0.004, 0.003}, 2016);
+    iso_med_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001}, 2016);
 
 
-	std::cout<<"Zel iso MC"<<std::endl;
+	std::cout<<"Zel sip MC"<<std::endl;
 	sip_isomed_Zel_MC = new E_bank(2016,
 				pathEl+"TnPZ_susyID_MC2016_Sip3D.root",
 				pathEl+"TnPZ_susyID_MC2017_Sip3D.root",
 				pathEl+"TnPZ_susyID_MC2018_Sip3D.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	sip_isomed_Zel_MC->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002});
-        sip_isomed_Zel_MC->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001});
-
+	sip_isomed_Zel_MC->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005}, 2018);
+    sip_isomed_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001}, 2018);
+	sip_isomed_Zel_MC->applySystematic_ptRange(0., 20., {0.006, 0.004, 0.007}, 2017);
+    sip_isomed_Zel_MC->applySystematic_ptRange(20., 999., {0.002, 0.002, 0.0006}, 2017);
+    sip_isomed_Zel_MC->applySystematic_ptRange(0., 20., {0.001, 0.007, 0.011}, 2016);
+    sip_isomed_Zel_MC->applySystematic_ptRange(20., 999., {0.005, 0.012, 0.003}, 2016);
 
 	std::cout<<"Zel id Data"<<std::endl;
 	id_Zel_Data = new E_bank(2016,
@@ -160,8 +171,12 @@ E_bank_manager::E_bank_manager(){
 				pathEl+"TnPZ_susyID_data2017_Tight.root",
 				pathEl+"TnPZ_susyID_data2018_tight.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002});
-        id_Zel_Data->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001});
+	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.01, 0.002}, 2018);
+	id_Zel_Data->applySystematic_ptRange(20., 999., {0.002, 0.001, 0.001}, 2018);
+	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.001, 0.005}, 2017);
+	id_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.002}, 2017);
+	id_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.003, 0.003}, 2016);
+	id_Zel_Data->applySystematic_ptRange(20., 999., {0.002, 0.002, 0.002}, 2016);;
 
 
 	std::cout<<"Zel iso Data"<<std::endl;
@@ -170,8 +185,12 @@ E_bank_manager::E_bank_manager(){
 				pathEl+"TnPZ_susyID_data2017_Iso.root",
 				pathEl+"TnPZ_susyID_data2018_Iso.root",
 				"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005});
-        iso_med_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001});
+	iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002}, 2018);
+    iso_med_Zel_Data->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001}, 2018);
+    iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.002, 0.003, 0.003}, 2017);
+    iso_med_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.002}, 2017);
+    iso_med_Zel_Data->applySystematic_ptRange(0., 20., {0.002, 0.004, 0.003}, 2016);
+    iso_med_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001}, 2016);
 
 	std::cout<<"Zel sip Data"<<std::endl;
 	sip_isomed_Zel_Data = new E_bank(2016,
@@ -179,8 +198,12 @@ E_bank_manager::E_bank_manager(){
 				pathEl+"TnPZ_susyID_data2017_Sip3D.root",
 				pathEl+"TnPZ_susyID_data2018_Sip3D.root",
 				 "tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.003, 0.009, 0.002});
-        sip_isomed_Zel_Data->applySystematic_ptRange(20., 999., {0.0003, 0.0007, 0.001});
+	sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.001, 0.004, 0.005}, 2018);
+    sip_isomed_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.001, 0.001}, 2018);
+	sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.006, 0.004, 0.007}, 2017);
+    sip_isomed_Zel_Data->applySystematic_ptRange(20., 999., {0.002, 0.002, 0.0006}, 2017);
+    sip_isomed_Zel_Data->applySystematic_ptRange(0., 20., {0.001, 0.007, 0.011}, 2016);
+    sip_isomed_Zel_Data->applySystematic_ptRange(20., 999., {0.005, 0.012, 0.003}, 2016);
 
 	std::cout<<"Zel VL MC"<<std::endl;
 	vl_Zel_MC = new E_bank(2016,
@@ -188,8 +211,12 @@ E_bank_manager::E_bank_manager(){
 			pathEl+"TnPZ_susyID_MC2017_veryLoose.root",
 			pathEl+"TnPZ_susyID_MC2018_veryLoose.root",
 			"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	vl_Zel_MC->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01});
-        vl_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003});
+	vl_Zel_MC->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01}, 2018);
+    vl_Zel_MC->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003}, 2018);
+    vl_Zel_MC->applySystematic_ptRange(0., 20., {0.002, 0.007, 0.03}, 2017);
+    vl_Zel_MC->applySystematic_ptRange(20., 999., {0.003, 0.0001, 0.0007}, 2017);
+    vl_Zel_MC->applySystematic_ptRange(0., 20., {0.02, 0.04, 0.02}, 2016);
+    vl_Zel_MC->applySystematic_ptRange(20., 999., {0.003, 0.005, 0.003}, 2016);
 
 	std::cout<<"Zel VL Data"<<std::endl;
 	vl_Zel_Data = new E_bank(2016,
@@ -197,8 +224,12 @@ E_bank_manager::E_bank_manager(){
 			pathEl+"TnPZ_susyID_data2017_veryLoose.root",
 			pathEl+"TnPZ_susyID_data2018_veryLoose.root",
 			"tpTree/TightSUSY_pt_eta/fit_eff_plots/");
-	vl_Zel_Data->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01});
-        vl_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003});
+	vl_Zel_Data->applySystematic_ptRange(0., 20., {0.01, 0.02, 0.01}, 2018);
+    vl_Zel_Data->applySystematic_ptRange(20., 999., {0.001, 0.002, 0.003}, 2018);
+    vl_Zel_Data->applySystematic_ptRange(0., 20., {0.002, 0.007, 0.03}, 2017);
+    vl_Zel_Data->applySystematic_ptRange(20., 999., {0.003, 0.0001, 0.0007}, 2017);
+    vl_Zel_Data->applySystematic_ptRange(0., 20., {0.02, 0.04, 0.02}, 2016);
+    vl_Zel_Data->applySystematic_ptRange(20., 999., {0.003, 0.005, 0.003}, 2016);
 
 	std::cout<<"Beginning Muon init"<<std::endl;
 	/////MUON ID/////////
@@ -751,7 +782,7 @@ std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta
 
 
 
-/*int main(){
+int main(){
 
 	E_bank_manager* e1 = new E_bank_manager();
 	
@@ -776,6 +807,6 @@ std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
 
 	
-}*/
+}
 
 

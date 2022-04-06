@@ -20,18 +20,22 @@ class E_bank_fit : public E_bank{
 	double _split_threshold;
 	
 	std::vector<double> _syst_low;//low pt systematic
+	
+	std::vector<double> _syst_low16;
+	std::vector<double> _syst_low17;
+	std::vector<double> _syst_low18;
 
 	//overwrite parent members to deal with split threshold
 	std::pair<double,double> getPair(double pt, double eta, int year);
 	double getEfficiency(double pt, double eta, int year);
 	double getError(double pt, double eta, int year);
 
-	void extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap);
+	void extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap, int year=0);
 
 	E_bank_fit(int year, std::string f16, std::string f17, std::string f18, std::string histPath);
 
 	//void applySystematicsLow(std::vector<double> errors, int year);
-	void setSystematicsLow(std::vector<double> errors);
+	void setSystematicsLow(std::vector<double> errors, int year=0);
 
 };
 E_bank_fit::E_bank_fit(int year, std::string f16, std::string f17, std::string f18, std::string histPath){
@@ -56,7 +60,13 @@ E_bank_fit::E_bank_fit(int year, std::string f16, std::string f17, std::string f
 	f3->Close();
 
 }
-void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap){
+void E_bank_fit::extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap, int year){
+	
+	if(year==2016) _syst_low= _syst_low16;
+	if(year==2017) _syst_low= _syst_low17;
+	if(year==2018) _syst_low= _syst_low18;
+	//if not specified default 2017
+	if(year==0) _syst_low= _syst_low17;
 	
 	TList* t = hCanv->GetListOfPrimitives();
 	//t->Print();
@@ -169,21 +179,21 @@ void E_bank_fit::doLowPtFit(double fitLow, double fitUp, double split_threshold,
 	f1->cd(histPath.c_str());
 	std::string name = (gDirectory->GetListOfKeys()->At(0)->GetName());
 	std::cout<< "Performing 2016 fits ... ";
-	extractFit( (TCanvas*) f1->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap16);
+	extractFit( (TCanvas*) f1->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap16, 2016);
 	f1->Close();
 
 	TFile* f2 = TFile::Open(ffit17.c_str());
 	f2->cd(histPath.c_str());
 	name = (gDirectory->GetListOfKeys()->At(0)->GetName());
 	std::cout<< "Performing 2017 fits ... ";
-	extractFit( (TCanvas*) f2->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap17);
+	extractFit( (TCanvas*) f2->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap17, 2017);
 	f2->Close();
 
 	TFile* f3 = TFile::Open(ffit18.c_str());
 	f3->cd(histPath.c_str());
 	name = (gDirectory->GetListOfKeys()->At(0)->GetName());
 	std::cout<< "Performing 2018 fits ... ";
-	extractFit( (TCanvas*) f3->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap18);
+	extractFit( (TCanvas*) f3->Get((histPath+name).c_str()),fitLow ,fitUp , _fitmap18, 2017);
 	f3->Close();	
 		
 
@@ -241,8 +251,12 @@ double E_bank_fit::getError(double pt, double eta, int year=0){
 	}
 	return -1;
 }
-void E_bank_fit::setSystematicsLow(std::vector<double> errors){
-	_syst_low = errors;
+void E_bank_fit::setSystematicsLow(std::vector<double> errors, int year){
+	if(year == 0) _syst_low = errors;
+	if(year == 2016) _syst_low16 = errors;
+	if(year == 2017) _syst_low17 = errors;
+	if(year == 2018) _syst_low18 = errors;
+	
 }
 /*void E_bank_fit::applySystematicsLow(std::vector<double> errors, int year=0){
 	_syst_low = errors;
