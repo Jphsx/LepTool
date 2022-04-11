@@ -814,7 +814,7 @@ std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta
 
 
 
-int main(){
+/*int main(){
 
 	E_bank_manager* e1 = new E_bank_manager();
 	
@@ -839,6 +839,6 @@ int main(){
 	e1->id_Zel_MC->printMap(e1->id_Zel_MC->_map18);	
 
 	
-}
+}*/
 
 
