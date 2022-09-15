@@ -822,8 +822,8 @@ std::pair<double, double>  E_bank_manager::getVlSimSFpair( double pt, double eta
 //void make2d( E_bank_manager* bankman, E_bank* dat, E_bank* mc, int year, int rank, std::string name){//involves no splitting
 void make2d ( E_bank_manager* bankman,int year, int rank, std::string name, //E_bank_fit* bankid_data, E_bank_fit* bankid_mc, 
 E_bank* bankid_data, E_bank* bankid_mc, 
-E_bank* bankiso_data=0,E_bank* bankiso_mc=0, 
-E_bank* banksip_data=0,E_bank* banksip_mc=0,
+E_bank_fit* bankiso_data=0,E_bank_fit* bankiso_mc=0, 
+E_bank_fit* banksip_data=0,E_bank_fit* banksip_mc=0,
 E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 
 
@@ -855,18 +855,18 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 //	if(rank>0){
 		if(year==2016){
 			dataiso = bankiso_data->_map16;
-			dataisolow = bankiso_data->_map16;
+			dataisolow = bankiso_data->_fitmap16;
 
 		}
 		if(year==2017){
 
 			dataiso = bankiso_data->_map17;
-			dataisolow = bankiso_data->_map17;
+			dataisolow = bankiso_data->_fitmap17;
 			
 		}
 		if(year==2018){
 			dataiso = bankiso_data->_map18;
-			dataisolow = bankiso_data->_map18;	
+			dataisolow = bankiso_data->_fitmap18;	
 		}
 //	}
 
@@ -879,22 +879,27 @@ E_bank* bankJ_data=0, E_bank* bankJ_mc=0 ){
 	std::set<double> etaset;
 
 //	if(rank>0){//loop on iso
-/*		for(auto& itr : dataisolow){
+		for(auto& itr : dataisolow){
 			ptset.insert(itr.first.first);
 			etaset.insert(itr.first.second);
 		}
-*/ //remove datisolow for electrons it doesnt have fit at low pt edges
+ //remove datisolow for electrons it doesnt have fit at low pt edges
 		for(auto& itr : dataiso){
-			//f(itr.first.first >=20){
+			if(itr.first.first >=20){
 				ptset.insert(itr.first.first);
-			//}
+			}
 			etaset.insert(itr.first.second);
 		}
 
 		ptset.insert( bankiso_data->_ptUpperEdge );
 		etaset.insert( bankiso_data->_etaUpperEdge);
 		
-		ptset.erase(0);//electrons start at 5
+std::vector<int> dropedge_hack{4,5,6,7,8,9,11,12,13,14,15,16,17,18,19};
+		//ptset.erase(0);//electrons start at 5
+		for(int i =0; i<dropedge_hack.size(); i++){
+			ptset.erase(dropedge_hack[i]);
+		}
+		
 std::cout<<"edges \n";
 for( auto itr : ptset){
 	std::cout<<itr<<" ";
@@ -927,8 +932,9 @@ std::cout<<std::endl;
 	//create bin edges from set
 	double* ptedge = new double[nedgept];
 	double* etaedge = new double[nedgeeta];
+//4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
 
-	
+
 	int i=0;
 	for(auto& itr: etaset ){
 		etaedge[i] = itr;	
@@ -1002,14 +1008,14 @@ std::cout<<std::endl;
 					effid_mc = bankid_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_mc = bankid_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 //				}
-/*				if(hdata->GetYaxis()->GetBinLowEdge(j)<20.){//pick jpsi in id
+				if(hdata->GetYaxis()->GetBinLowEdge(j)<20.){//pick jpsi in id
 					//std::cout<<"low pt eval id "<<hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effid_data = bankJ_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_data = bankJ_data->getError( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					effid_mc = bankJ_mc->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 					errid_mc = bankJ_mc->getError(hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
 				}
-*///remove jpsi selection
+
 					//everything else sets normally
 					//std::cout<<"eval iso "<<hdata->GetYaxis()->GetBinLowEdge(j)<<" "<<hdata->GetXaxis()->GetBinLowEdge(i)<<std::endl;
 					effiso_data = bankiso_data->getEfficiency( hdata->GetYaxis()->GetBinLowEdge(j), hdata->GetXaxis()->GetBinLowEdge(i), year);
@@ -1089,8 +1095,8 @@ std::cout<<std::endl;
 	hsf->Draw("COLZ");
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
-        	 auto t = new TText(hmc->GetXaxis()->GetBinCenter(i),  //was +0.25
-                            hmc->GetYaxis()->GetBinCenter(j)+1.95,
+        	 auto t = new TText(hmc->GetXaxis()->GetBinCenter(i)+0.25,  //was +0.25
+                            hmc->GetYaxis()->GetBinCenter(j)+0.5,
                             Form(" %4.3f +/- %4.3f",hmc->GetBinContent(i,j), hmc->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
 		 t->SetTextColor(kRed+2);
@@ -1100,8 +1106,8 @@ std::cout<<std::endl;
   	}
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
-        	 auto t = new TText(hdata->GetXaxis()->GetBinCenter(i),  //was -0.25
-                            hdata->GetYaxis()->GetBinCenter(j),  //was +0.5
+        	 auto t = new TText(hdata->GetXaxis()->GetBinCenter(i)-0.25,  //was -0.25
+                            hdata->GetYaxis()->GetBinCenter(j)+0.5,  //was +0.5
                             Form(" %4.3f +/- %4.3f",hdata->GetBinContent(i,j), hdata->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
         	 t->SetTextAlign(22);
@@ -1111,7 +1117,7 @@ std::cout<<std::endl;
 	for (int i=1; i<=nbinsX; i++) {
       		for (int j=1; j<=nbinsY; j++) {
         	 auto t = new TText(hsf->GetXaxis()->GetBinCenter(i),
-                            hsf->GetYaxis()->GetBinCenter(j)-1.95,
+                            hsf->GetYaxis()->GetBinCenter(j)-1.68,
                             Form(" %4.3f +/- %4.3f",hsf->GetBinContent(i,j), hsf->GetBinError(i,j)));
 		 t->SetTextSize(0.02);
 		 t->SetTextColor(kMagenta+2);
@@ -1164,9 +1170,9 @@ setTDRStyle();
 	//id_Zmu_MC->printMap(id_Zmu_MC->_map16);
 	//e1->id_Zmu_Data->printMap(e1->id_Zmu_Data->_map16);
 
-/*
+
 	//2016 GSB VL
-	make2d(e1,2016,1,"2016 Gold Eff.",
+	make2d(e1,2016,1,"2016 Muon Gold Eff.",
 	//id_Zmu_Data, id_Zmu_MC,
 	e1->id_Zmu_Data, e1->id_Zmu_MC,	
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
@@ -1174,71 +1180,71 @@ setTDRStyle();
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 
-	make2d(e1,2016,2,"2016 Silver Eff.",
+	make2d(e1,2016,2,"2016 Muon Silver Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
-	make2d(e1,2016,3,"2016 Bronze Eff.",
+	make2d(e1,2016,3,"2016 Muon Bronze Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
 	//first set of objects are just placeholders that will get sliced
-	make2d(e1,2016,0,"2016 V.L. Eff.",
+	make2d(e1,2016,0,"2016 Muon V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 	//2017 GSB VL
-	make2d(e1,2017,1,"2017 Gold Eff.",
+	make2d(e1,2017,1,"2017 Muon Gold Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
-	make2d(e1,2017,2,"2017 Silver Eff.",
+	make2d(e1,2017,2,"2017 Muon Silver Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
-	make2d(e1,2017,3,"2017 Bronze Eff.",
+	make2d(e1,2017,3,"2017 Muon Bronze Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
-	make2d(e1,2017,0,"2017 V.L. Eff.",
+	make2d(e1,2017,0,"2017 Muon V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
 	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 
 	//2018 GSB VL
-	make2d(e1,2018,1,"2018 Gold Eff.",
+	make2d(e1,2018,1,"2018 Muon Gold Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
-	make2d(e1,2018,2,"2018 Silver Eff.",
+	make2d(e1,2018,2,"2018 Muon Silver Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 	
-	make2d(e1,2018,3,"2018 Bronze Eff.",
+	make2d(e1,2018,3,"2018 Muon Bronze Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
 	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
 	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
 	e1->id_Jmu_Data, e1->id_Jmu_MC);
 
-	make2d(e1,2018,0,"2018 V.L. Eff.",
+	make2d(e1,2018,0,"2018 Muon V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
 	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 	 
-	*/ 
+	/*
 	   	make2d(e1,2016,1,"2016 Electron Gold Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
@@ -1309,7 +1315,7 @@ setTDRStyle();
 	 e1->vl_Zel_Data, e1->vl_Zel_MC);
 
 
-
+*/
 
 }
 
