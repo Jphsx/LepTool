@@ -957,7 +957,9 @@ std::cout<<std::endl;
 	
 	*/
 
-	gStyle->SetPalette(kAquamarine);
+	//gStyle->SetPalette(kAquamarine);
+	//gStyle->SetPalette(kDarkBodyRadiator);
+	gStyle->SetPalette(kBlackBody);
 	hmc = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"m").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hdata = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"d").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hsf = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"s").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
@@ -1025,32 +1027,32 @@ std::cout<<std::endl;
 					
 				
 			// gsb content
-			if(rank == 1){//gold
-				binContent2 = effid_data*effiso_data*effsip_data;
-				binError2 = bankman->getGSerr(effid_data, effiso_data, effsip_data, errid_data, erriso_data, errsip_data );
+			if(rank == 1){//gold hacked to ID
+				binContent2 = effid_data;
+				binError2 = errid_data;
 
-				binContent1 = effid_mc*effiso_mc*effsip_mc;
-				binError1 = bankman->getGSerr(effid_mc, effiso_mc, effsip_mc, errid_mc, erriso_mc, errsip_mc );
-
-				binContent3 = binContent2/binContent1;
-				binError3 = bankman->getSFerr(binContent2,binContent1, binError2, binError1);
-			}
-			if(rank == 2){//silver
-				binContent2 = effid_data*effiso_data*(1.-effsip_data);
-				binError2 = bankman->getGSerr(effid_data, effiso_data, (1.-effsip_data), errid_data, erriso_data, errsip_data );
-
-				binContent1 = effid_mc*effiso_mc*(1.-effsip_mc);
-				binError1 = bankman->getGSerr(effid_mc, effiso_mc, (1.-effsip_mc), errid_mc, erriso_mc, errsip_mc );
+				binContent1 = effid_mc;
+				binError1 = errid_mc;
 
 				binContent3 = binContent2/binContent1;
 				binError3 = bankman->getSFerr(binContent2,binContent1, binError2, binError1);
 			}
-			if(rank == 3){//bronze
-				binContent2 = 1.-(effid_data*effiso_data);
-				binError2 = bankman->getBerr(effid_data, effiso_data, errid_data, erriso_data );
+			if(rank == 2){//silver hacked to ISO
+				binContent2 = effiso_data;
+				binError2 = erriso_data;
 
-				binContent1 = 1.-(effid_mc*effiso_mc);
-				binError1 = bankman->getBerr(effid_mc, effiso_mc, errid_mc, erriso_mc );
+				binContent1 = effiso_mc;
+				binError1 = erriso_mc;
+
+				binContent3 = binContent2/binContent1;
+				binError3 = bankman->getSFerr(binContent2,binContent1, binError2, binError1);
+			}
+			if(rank == 3){//bronze hacked to SIP3D
+				binContent2 = effsip_data;
+				binError2 = errsip_data;
+
+				binContent1 = effsip_mc;
+				binError1 = errsip_mc;
 
 				binContent3 = binContent2/binContent1;
 				binError3 = bankman->getSFerr(binContent2,binContent1, binError2, binError1);
@@ -1239,19 +1241,19 @@ setTDRStyle();
 	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 	 
 	*/ 
-	   	make2d(e1,2016,1,"2016 Electron Gold Eff.",
+	   	make2d(e1,2016,1,"2016 Electron Id Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 
-	make2d(e1,2016,2,"2016 Electron Silver Eff.",
+	make2d(e1,2016,2,"2016 Electron Iso Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 	
-	make2d(e1,2016,3,"2016 Electron Bronze Eff.",
+	make2d(e1,2016,3,"2016 SIP3D  Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC);
@@ -1263,19 +1265,19 @@ setTDRStyle();
 	
 	
 	 	//2017 GSB VL
-	make2d(e1,2017,1,"2017 Electron Gold Eff.",
+	make2d(e1,2017,1,"2017 Electron Id Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 
-	make2d(e1,2017,2,"2017 Electron Silver Eff.",
+	make2d(e1,2017,2,"2017 Electron Iso Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 	
-	make2d(e1,2017,3,"2017 Electron Bronze Eff.",
+	make2d(e1,2017,3,"2017 Electron SIP3D Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
@@ -1286,19 +1288,19 @@ setTDRStyle();
 	 e1->vl_Zel_Data, e1->vl_Zel_MC);
 
     
-    make2d(e1,2018,1,"2018 Electron Gold Eff.",
+    make2d(e1,2018,1,"2018 Electron Id Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 
-	make2d(e1,2018,2,"2018 Electron Silver Eff.",
+	make2d(e1,2018,2,"2018 Electron Iso Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
 	);
 	
-	make2d(e1,2018,3,"2018 Electron Bronze Eff.",
+	make2d(e1,2018,3,"2018 Electron SIP3D Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
 	e1->sip_isomed_Zel_Data, e1->sip_isomed_Zel_MC
