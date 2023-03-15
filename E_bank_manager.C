@@ -959,7 +959,7 @@ std::cout<<std::endl;
 
 	//gStyle->SetPalette(kAquamarine);
 	//gStyle->SetPalette(kDarkBodyRadiator);
-	gStyle->SetPalette(kBlackBody);
+	gStyle->SetPalette(kAquamarine);
 	hmc = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"m").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hdata = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"d").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
 	hsf = new TH2D(("h"+std::to_string(year)+std::to_string(rank)+"s").c_str(),";#eta;p_{T} [GeV];Data/MC",nbinseta ,etaedge, nbinspt, ptedge);
@@ -1215,8 +1215,8 @@ setTDRStyle();
 	make2d(e1,2017,0,"2017 V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
 	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
-
-
+*/
+/*
 	//2018 GSB VL
 	make2d(e1,2018,1,"2018 Gold Eff.",
 	e1->id_Zmu_Data, e1->id_Zmu_MC,
@@ -1239,8 +1239,9 @@ setTDRStyle();
 	make2d(e1,2018,0,"2018 V.L. Eff.",
 	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
 	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
-	 
 	*/ 
+	/*
+	
 	   	make2d(e1,2016,1,"2016 Electron Id Eff.",
 	e1->id_Zel_Data, e1->id_Zel_MC,
 	e1->iso_med_Zel_Data, e1->iso_med_Zel_MC,
@@ -1310,7 +1311,80 @@ setTDRStyle();
 	e1->vl_Zel_Data, e1->vl_Zel_MC,
 	 e1->vl_Zel_Data, e1->vl_Zel_MC);
 
+*/
 
+//this script is hacked to do efficiency plots not GSB, here is the muon ones for the pog slides
+	//2016 GSB VL
+	make2d(e1,2016,1,"2016 Muon ID Eff.",
+	//id_Zmu_Data, id_Zmu_MC,
+	e1->id_Zmu_Data, e1->id_Zmu_MC,	
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+
+	make2d(e1,2016,2,"2016 Muon Iso Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+	
+	make2d(e1,2016,3,"2016 Muon SIP3D Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+	//first set of objects are just placeholders that will get sliced
+	make2d(e1,2016,0,"2016 Muon V.L. Eff.",
+	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
+	e1->vl_Zmu_Data, e1->vl_Zmu_MC);
+
+	//2017 GSB VL
+	make2d(e1,2017,1,"2017 Muon ID Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+	make2d(e1,2017,2,"2017 Muon Iso Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+	
+	make2d(e1,2017,3,"2017 Muon SIP3D Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+	make2d(e1,2017,0,"2017 Muon V.L. Eff.",
+	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
+	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
+
+	//2018 GSB VL
+	make2d(e1,2018,1,"2018 Muon ID Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+	make2d(e1,2018,2,"2018 Muon Iso Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+	
+	make2d(e1,2018,3,"2018 Muon SIP3D Eff.",
+	e1->id_Zmu_Data, e1->id_Zmu_MC,
+	e1->iso_med_Zmu_Data, e1->iso_med_Zmu_MC,
+	e1->sip_isomed_Zmu_Data, e1->sip_isomed_Zmu_MC,
+	e1->id_Jmu_Data, e1->id_Jmu_MC);
+
+	make2d(e1,2018,0,"2018 Muon V.L. Eff.",
+	e1->vl_Zmu_Data, e1->vl_Zmu_MC,
+	 e1->vl_Zmu_Data, e1->vl_Zmu_MC);
 
 
 }
